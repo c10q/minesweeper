@@ -1,5 +1,10 @@
 # minesweeper
 
-## 지뢰찾기
+## 초기 설정
 
-화이팅
+`$ git clone https://github.com/c10q/minesweeper.git` \
+`$ cd minesweeper` 
+
+## 실행 방법
+
+`$ node index.js`
