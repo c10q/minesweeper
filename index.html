@@ -4,61 +4,29 @@
     <meta charset="UTF-8">
     <title>Minesweeper</title>
     <link href="index.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
+<script>
+    $(document).ready(function () {
+        let cnt = 12
+        for(let i = 0; i < cnt; i++){
+            $('#board tbody.board_row').append('<tr class=' + 'row_' + (i)  +'></tr>');
+            for(let j = 0; j < cnt; j++){
+                $('#board tr.row_' + i).append('<td id='+ (i * cnt + j) + '></td>')
+            }
+        }
+    })
+</script>
 
+<div id="books">
+    <ul class="list">
+    </ul>
+</div>
 <!-- To Do. 가로세로 변수 설정하고 for문 돌려서 td마다 아이디 넣어주세요-->
-<table>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>2</td>
-      <td>*</td>
-      <td>1</td>
-      <td>1</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
+<table id="board">
+    <tbody class="board_row">
+    </tbody>
 </table>
 </body>
 
