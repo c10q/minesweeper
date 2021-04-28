@@ -1,0 +1,15 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body{
+    padding: 1em;
+}
+td{
+    border: 1px solid #000;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+}
