@@ -1,0 +1,19 @@
+{
+  "name": "minesweeper",
+  "version": "1.0.0",
+  "description": "## 지뢰찾기",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/c10q/minesweeper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/c10q/minesweeper/issues"
+  },
+  "homepage": "https://github.com/c10q/minesweeper#readme"
+}
