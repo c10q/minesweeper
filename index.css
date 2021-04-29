@@ -13,3 +13,12 @@ td{
     line-height: 20px;
     text-align: center;
 }
+input[type="text"]{
+    padding: 5px;;
+}
+button{
+    padding: 10px;
+}
+.css-mine{
+    background-color: gray;
+}

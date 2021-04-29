@@ -8,12 +8,50 @@
 </head>
 <body>
 <script>
+    //ToDo. 스크립트 별도 파일에 저장, 마우스 우클릭 이벤트 방지, 변수명 통일
     $(document).ready(function () {
         let cnt = 12
+        let cntMine = 15;
         for(let i = 0; i < cnt; i++){
             $('#board tbody.board_row').append('<tr class=' + 'row_' + (i)  +'></tr>');
             for(let j = 0; j < cnt; j++){
                 $('#board tr.row_' + i).append('<td id='+ (i * cnt + j) + '></td>')
+            }
+        }
+
+        setMine()
+
+        $('td').click(function(){
+            $currId = parseInt( ($(this).attr('id')) );
+            setBg($currId);
+            $cntMine = 0;
+            if( getRow($currId) == getRow($currId+1) ){ setBg($currId+1) == true ? $cntMine++ : ''};
+            if( getRow($currId) == getRow($currId-1) ){ setBg($currId-1) == true ? $cntMine++ : ''};
+            setBg($currId+cnt) == true ? $cntMine++ : '';
+            if( getRow($currId+cnt) == getRow($currId+cnt+1) ){ setBg($currId+cnt+1) == true ? $cntMine++ : ''};
+            if( getRow($currId+cnt) == getRow($currId+cnt-1) ){ setBg($currId+cnt-1) == true ? $cntMine++ : ''};
+            setBg($currId-cnt) == true ? $cntMine++ : '';
+            if( getRow($currId-cnt) == getRow($currId-cnt+1) ){ setBg($currId-cnt+1) == true ? $cntMine++ : ''};
+            if( getRow($currId-cnt) == getRow($currId-cnt-1) ){ setBg($currId-cnt-1) == true ? $cntMine++ : ''};
+            $(this).text($cntMine);
+        });
+
+        function setBg($id){
+            if( ($('#'+ $id).hasClass('css-mine')) ){
+                return true;
+            }
+        }
+        
+        function getRow($id){
+            return Math.floor($id/cnt);
+        }
+
+        function setMine(){
+            for($i=0; $i<cntMine; $i++){
+                //숫자가 중복될 가능성?
+                $mineId = Math.floor(Math.random()*cnt*cnt);
+                console.log($mineId);
+                $('#'+ $mineId).addClass('css-mine');
             }
         }
     })
@@ -23,7 +61,6 @@
     <ul class="list">
     </ul>
 </div>
-<!-- To Do. 가로세로 변수 설정하고 for문 돌려서 td마다 아이디 넣어주세요-->
 <table id="board">
     <tbody class="board_row">
     </tbody>
