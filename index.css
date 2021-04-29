@@ -22,3 +22,15 @@ button{
 .css-mine{
     background-color: gray;
 }
+
+.flag{
+    background-color: red;
+}
+
+.block-closed{
+    background-color: gray;
+}
+
+.block-closed:hover{
+    background-color: dimgray;
+}

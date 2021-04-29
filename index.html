@@ -11,29 +11,41 @@
     //ToDo. 스크립트 별도 파일에 저장, 마우스 우클릭 이벤트 방지, 변수명 통일
     $(document).ready(function () {
         let cnt = 12
-        let cntMine = 15;
+        let cntMine = 35;
         for(let i = 0; i < cnt; i++){
             $('#board tbody.board_row').append('<tr class=' + 'row_' + (i)  +'></tr>');
             for(let j = 0; j < cnt; j++){
-                $('#board tr.row_' + i).append('<td id='+ (i * cnt + j) + '></td>')
+                $('#board tr.row_' + i).append('<td class="block-closed" id='+ (i * cnt + j) + '></td>')
             }
         }
 
         setMine()
 
         $('td').click(function(){
-            $currId = parseInt( ($(this).attr('id')) );
-            setBg($currId);
-            $cntMine = 0;
-            if( getRow($currId) == getRow($currId+1) ){ setBg($currId+1) == true ? $cntMine++ : ''};
-            if( getRow($currId) == getRow($currId-1) ){ setBg($currId-1) == true ? $cntMine++ : ''};
-            setBg($currId+cnt) == true ? $cntMine++ : '';
-            if( getRow($currId+cnt) == getRow($currId+cnt+1) ){ setBg($currId+cnt+1) == true ? $cntMine++ : ''};
-            if( getRow($currId+cnt) == getRow($currId+cnt-1) ){ setBg($currId+cnt-1) == true ? $cntMine++ : ''};
-            setBg($currId-cnt) == true ? $cntMine++ : '';
-            if( getRow($currId-cnt) == getRow($currId-cnt+1) ){ setBg($currId-cnt+1) == true ? $cntMine++ : ''};
-            if( getRow($currId-cnt) == getRow($currId-cnt-1) ){ setBg($currId-cnt-1) == true ? $cntMine++ : ''};
-            $(this).text($cntMine);
+            $currId = parseInt( ($(this).attr('id')) )
+            $( '#' + $currId ).removeClass( 'block-closed' )
+            setBg($currId)
+            $cntMine = 0
+            if( getRow($currId) == getRow($currId+1) ){ setBg($currId+1) == true ? $cntMine++ : ''}
+            if( getRow($currId) == getRow($currId-1) ){ setBg($currId-1) == true ? $cntMine++ : ''}
+            setBg($currId+cnt) == true ? $cntMine++ : ''
+            if( getRow($currId+cnt) == getRow($currId+cnt+1) ){ setBg($currId+cnt+1) == true ? $cntMine++ : ''}
+            if( getRow($currId+cnt) == getRow($currId+cnt-1) ){ setBg($currId+cnt-1) == true ? $cntMine++ : ''}
+            setBg($currId-cnt) == true ? $cntMine++ : ''
+            if( getRow($currId-cnt) == getRow($currId-cnt+1) ){ setBg($currId-cnt+1) == true ? $cntMine++ : ''}
+            if( getRow($currId-cnt) == getRow($currId-cnt-1) ){ setBg($currId-cnt-1) == true ? $cntMine++ : ''}
+            $(this).text($cntMine)
+        })
+
+        $('td').on('mousedown', function (event){
+            if (event.button === 2 || event.which === 3){
+                $currId = parseInt( ($(this).attr('id')) )
+                if ($( '#' + $currId ).hasClass( 'flag' )) $( '#' + $currId ).removeClass( 'flag' )
+                else $( '#' + $currId ).addClass( 'flag' )
+            }
+        })
+        $('td').on('contextmenu', function() {
+            return false;
         });
 
         function setBg($id){
@@ -57,10 +69,6 @@
     })
 </script>
 
-<div id="books">
-    <ul class="list">
-    </ul>
-</div>
 <table id="board">
     <tbody class="board_row">
     </tbody>
