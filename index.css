@@ -20,7 +20,7 @@ button{
     padding: 10px;
 }
 .css-mine{
-    background-color: gray;
+    background-color: #000;
 }
 
 .flag{
@@ -28,7 +28,7 @@ button{
 }
 
 .block-closed{
-
+    background-color: #e5e5e5;
 }
 
 .block-closed:hover{

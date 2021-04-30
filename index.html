@@ -20,29 +20,30 @@
         }
 
         $('#board-size-change-button').click(function (){
-            $cnt = $('#board-size-value').val()
-            resize()
+            $cnt2 = $('#board-size-value').val()
+            resize($cnt2)
             setMine()
         })
 
         setMine()
 
-        $('td').click(function(){
+        for($i=0; $i<$cnt*$cnt; $i++){
+            $cntMine=0;
+            if( getRow($i) == getRow($i+1) ){ setBg($i+1) == true ? $cntMine++ : ''}
+            if( getRow($i) == getRow($i-1) ){ setBg($i-1) == true ? $cntMine++ : ''}
+            setBg($i+$cnt) == true ? $cntMine++ : ''
+            if( getRow($i+$cnt) == getRow($i+$cnt+1) ){ setBg($i+$cnt+1) == true ? $cntMine++ : ''}
+            if( getRow($i+$cnt) == getRow($i+$cnt-1) ){ setBg($i+$cnt-1) == true ? $cntMine++ : ''}
+            setBg($i-$cnt) == true ? $cntMine++ : ''
+            if( getRow($i-$cnt) == getRow($i-$cnt+1) ){ setBg($i-$cnt+1) == true ? $cntMine++ : ''}
+            if( getRow($i-$cnt) == getRow($i-$cnt-1) ){ setBg($i-$cnt-1) == true ? $cntMine++ : ''}
+            $('#'+ $i).text($cntMine)
+        }
+
+        $('td').on("click", function(){
             $currId = parseInt( ($(this).attr('id')) )
-            console.log('zz')
-            $( '#' + $currId ).removeClass( 'block-closed' )
-            setBg($currId)
-            $cntMine = 0
-            if( getRow($currId) == getRow($currId+1) ){ setBg($currId+1) == true ? $cntMine++ : '' }
-            if( getRow($currId) == getRow($currId-1) ){ setBg($currId-1) == true ? $cntMine++ : '' }
-            setBg($currId+$cnt) == true ? $cntMine++ : ''
-            if( getRow($currId+$cnt) == getRow($currId+$cnt+1) ){ setBg($currId+$cnt+1) == true ? $cntMine++ : '' }
-            if( getRow($currId+$cnt) == getRow($currId+$cnt-1) ){ setBg($currId+$cnt-1) == true ? $cntMine++ : '' }
-            setBg($currId-$cnt) == true ? $cntMine++ : ''
-            if( getRow($currId-$cnt) == getRow($currId-$cnt+1) ){ setBg($currId-$cnt+1) == true ? $cntMine++ : '' }
-            if( getRow($currId-$cnt) == getRow($currId-$cnt-1) ){ setBg($currId-$cnt-1) == true ? $cntMine++ : '' }
-            $(this).text($cntMine)
-        })
+            openBlock( $currId )
+        });
 
         $('td.block-closed').on('mousedown', function (event){
             if (event.button === 2 || event.which === 3){
@@ -50,7 +51,9 @@
                 if ($( '#' + $currId ).hasClass( 'flag' )) $( '#' + $currId ).removeClass( 'flag' )
                 else $( '#' + $currId ).addClass( 'flag' )
             }
-        }).on('contextmenu', function() {
+        })
+
+        $('td').on('contextmenu', function() {
             return false;
         });
 
@@ -64,16 +67,23 @@
             return Math.floor($id/$cnt);
         }
 
+        function openBlock($i){
+            $i = parseInt($i);
+            $( '#' + $i ).removeClass( 'block-closed' )
+            if( ($('#'+ $i).text() == '0' ) ){
+                if( getRow($i) == getRow($i+1) )  openBlock( $i+1 )
+            }
+        }
+
         function setMine(){
             for($i=0; $i<$cntMine; $i++){
                 //숫자가 중복될 가능성?
                 $mineId = Math.floor(Math.random()*$cnt*$cnt);
-                console.log($mineId);
                 $('#'+ $mineId).addClass('css-mine');
             }
         }
 
-        function resize(){
+        function resize($cnt){
             $('#board tbody.board_row').empty()
             for($i = 0; $i < $cnt; $i++){
                 $('#board tbody.board_row').append('<tr class=' + 'row_' + ($i)  +'></tr>');
