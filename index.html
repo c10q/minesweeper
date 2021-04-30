@@ -10,41 +10,47 @@
 <script>
     //ToDo. 스크립트 별도 파일에 저장, 마우스 우클릭 이벤트 방지, 변수명 통일
     $(document).ready(function () {
-        let cnt = 12
-        let cntMine = 35;
-        for(let i = 0; i < cnt; i++){
-            $('#board tbody.board_row').append('<tr class=' + 'row_' + (i)  +'></tr>');
-            for(let j = 0; j < cnt; j++){
-                $('#board tr.row_' + i).append('<td class="block-closed" id='+ (i * cnt + j) + '></td>')
+        $cnt = 12
+        $cntMine = 35;
+        for($i = 0; $i < $cnt; $i++){
+            $('#board tbody.board_row').append('<tr class=' + 'row_' + ($i)  +'></tr>');
+            for($j = 0; $j < $cnt; $j++){
+                $('#board tr.row_' + $i).append('<td class="block-closed" id='+ ($i * $cnt + $j) + '></td>')
             }
         }
+
+        $('#board-size-change-button').click(function (){
+            $cnt = $('#board-size-value').val()
+            resize()
+            setMine()
+        })
 
         setMine()
 
         $('td').click(function(){
             $currId = parseInt( ($(this).attr('id')) )
+            console.log('zz')
             $( '#' + $currId ).removeClass( 'block-closed' )
             setBg($currId)
             $cntMine = 0
-            if( getRow($currId) == getRow($currId+1) ){ setBg($currId+1) == true ? $cntMine++ : ''}
-            if( getRow($currId) == getRow($currId-1) ){ setBg($currId-1) == true ? $cntMine++ : ''}
-            setBg($currId+cnt) == true ? $cntMine++ : ''
-            if( getRow($currId+cnt) == getRow($currId+cnt+1) ){ setBg($currId+cnt+1) == true ? $cntMine++ : ''}
-            if( getRow($currId+cnt) == getRow($currId+cnt-1) ){ setBg($currId+cnt-1) == true ? $cntMine++ : ''}
-            setBg($currId-cnt) == true ? $cntMine++ : ''
-            if( getRow($currId-cnt) == getRow($currId-cnt+1) ){ setBg($currId-cnt+1) == true ? $cntMine++ : ''}
-            if( getRow($currId-cnt) == getRow($currId-cnt-1) ){ setBg($currId-cnt-1) == true ? $cntMine++ : ''}
+            if( getRow($currId) == getRow($currId+1) ){ setBg($currId+1) == true ? $cntMine++ : '' }
+            if( getRow($currId) == getRow($currId-1) ){ setBg($currId-1) == true ? $cntMine++ : '' }
+            setBg($currId+$cnt) == true ? $cntMine++ : ''
+            if( getRow($currId+$cnt) == getRow($currId+$cnt+1) ){ setBg($currId+$cnt+1) == true ? $cntMine++ : '' }
+            if( getRow($currId+$cnt) == getRow($currId+$cnt-1) ){ setBg($currId+$cnt-1) == true ? $cntMine++ : '' }
+            setBg($currId-$cnt) == true ? $cntMine++ : ''
+            if( getRow($currId-$cnt) == getRow($currId-$cnt+1) ){ setBg($currId-$cnt+1) == true ? $cntMine++ : '' }
+            if( getRow($currId-$cnt) == getRow($currId-$cnt-1) ){ setBg($currId-$cnt-1) == true ? $cntMine++ : '' }
             $(this).text($cntMine)
         })
 
-        $('td').on('mousedown', function (event){
+        $('td.block-closed').on('mousedown', function (event){
             if (event.button === 2 || event.which === 3){
                 $currId = parseInt( ($(this).attr('id')) )
                 if ($( '#' + $currId ).hasClass( 'flag' )) $( '#' + $currId ).removeClass( 'flag' )
                 else $( '#' + $currId ).addClass( 'flag' )
             }
-        })
-        $('td').on('contextmenu', function() {
+        }).on('contextmenu', function() {
             return false;
         });
 
@@ -55,20 +61,32 @@
         }
         
         function getRow($id){
-            return Math.floor($id/cnt);
+            return Math.floor($id/$cnt);
         }
 
         function setMine(){
-            for($i=0; $i<cntMine; $i++){
+            for($i=0; $i<$cntMine; $i++){
                 //숫자가 중복될 가능성?
-                $mineId = Math.floor(Math.random()*cnt*cnt);
+                $mineId = Math.floor(Math.random()*$cnt*$cnt);
                 console.log($mineId);
                 $('#'+ $mineId).addClass('css-mine');
             }
         }
+
+        function resize(){
+            $('#board tbody.board_row').empty()
+            for($i = 0; $i < $cnt; $i++){
+                $('#board tbody.board_row').append('<tr class=' + 'row_' + ($i)  +'></tr>');
+                for($j = 0; $j < $cnt; $j++){
+                    $('#board tr.row_' + $i).append('<td class="block-closed" id='+ ($i * $cnt + $j) + '></td>')
+                }
+            }
+        }
+
     })
 </script>
-
+<input id="board-size-value" type="text">
+<button id="board-size-change-button">적용</button>
 <table id="board">
     <tbody class="board_row">
     </tbody>
