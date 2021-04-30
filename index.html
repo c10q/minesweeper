@@ -10,87 +10,122 @@
 <script>
     //ToDo. 스크립트 별도 파일에 저장, 마우스 우클릭 이벤트 방지, 변수명 통일
     $(document).ready(function () {
-        $cnt = 12
-        $cntMine = 35;
-        for($i = 0; $i < $cnt; $i++){
-            $('#board tbody.board_row').append('<tr class=' + 'row_' + ($i)  +'></tr>');
-            for($j = 0; $j < $cnt; $j++){
-                $('#board tr.row_' + $i).append('<td class="block-closed" id='+ ($i * $cnt + $j) + '></td>')
-            }
-        }
+        let size = 16
+        let mines = 35;
+        let opened = [];
 
-        $('#board-size-change-button').click(function (){
-            $cnt2 = $('#board-size-value').val()
-            resize($cnt2)
-            setMine()
+        resize(size)
+
+        $('#board-size-change-button').click(function () {
+            size = $('#board-size-value').val()
+            resize(size)
         })
 
-        setMine()
-
-        for($i=0; $i<$cnt*$cnt; $i++){
-            $cntMine=0;
-            if( getRow($i) == getRow($i+1) ){ setBg($i+1) == true ? $cntMine++ : ''}
-            if( getRow($i) == getRow($i-1) ){ setBg($i-1) == true ? $cntMine++ : ''}
-            setBg($i+$cnt) == true ? $cntMine++ : ''
-            if( getRow($i+$cnt) == getRow($i+$cnt+1) ){ setBg($i+$cnt+1) == true ? $cntMine++ : ''}
-            if( getRow($i+$cnt) == getRow($i+$cnt-1) ){ setBg($i+$cnt-1) == true ? $cntMine++ : ''}
-            setBg($i-$cnt) == true ? $cntMine++ : ''
-            if( getRow($i-$cnt) == getRow($i-$cnt+1) ){ setBg($i-$cnt+1) == true ? $cntMine++ : ''}
-            if( getRow($i-$cnt) == getRow($i-$cnt-1) ){ setBg($i-$cnt-1) == true ? $cntMine++ : ''}
-            $('#'+ $i).text($cntMine)
-        }
-
-        $('td').on("click", function(){
-            $currId = parseInt( ($(this).attr('id')) )
-            openBlock( $currId )
-        });
-
-        $('td.block-closed').on('mousedown', function (event){
-            if (event.button === 2 || event.which === 3){
-                $currId = parseInt( ($(this).attr('id')) )
-                if ($( '#' + $currId ).hasClass( 'flag' )) $( '#' + $currId ).removeClass( 'flag' )
-                else $( '#' + $currId ).addClass( 'flag' )
-            }
-        })
-
-        $('td').on('contextmenu', function() {
-            return false;
-        });
-
-        function setBg($id){
-            if( ($('#'+ $id).hasClass('css-mine')) ){
+        function setBg($id) {
+            if (($('#' + $id).hasClass('css-mine'))) {
                 return true;
             }
         }
-        
-        function getRow($id){
-            return Math.floor($id/$cnt);
+
+        function getRow($id) {
+            return Math.floor($id / size);
         }
 
-        function openBlock($i){
+        function openBlock($i) {
             $i = parseInt($i);
-            $( '#' + $i ).removeClass( 'block-closed' )
-            if( ($('#'+ $i).text() == '0' ) ){
-                if( getRow($i) == getRow($i+1) )  openBlock( $i+1 )
-            }
-        }
+            $('#' + $i).removeClass('block-closed')
 
-        function setMine(){
-            for($i=0; $i<$cntMine; $i++){
-                //숫자가 중복될 가능성?
-                $mineId = Math.floor(Math.random()*$cnt*$cnt);
-                $('#'+ $mineId).addClass('css-mine');
-            }
-        }
+            if (($('#' + $i).text() == '0')) {
+                if (opened[getRow($i)][$i % size] == 0) {
 
-        function resize($cnt){
-            $('#board tbody.board_row').empty()
-            for($i = 0; $i < $cnt; $i++){
-                $('#board tbody.board_row').append('<tr class=' + 'row_' + ($i)  +'></tr>');
-                for($j = 0; $j < $cnt; $j++){
-                    $('#board tr.row_' + $i).append('<td class="block-closed" id='+ ($i * $cnt + $j) + '></td>')
+                    opened[getRow($i)][$i % size] = 1
+                    console.log(opened)
+                    if (getRow($i) == getRow($i + 1)) {
+                        openBlock($i + 1)
+                    }
+                    if (getRow($i) == getRow($i - 1)) {
+                        openBlock($i - 1)
+                    }
+
+                    if (getRow($i + size) == getRow($i  + size - 1)) {
+                        openBlock($i + size - 1)
+                    }
+                    if (getRow($i + size) == getRow($i + size + 1)) {
+                        openBlock($i + size + 1)
+                    }
+                    if (getRow($i - size) == getRow($i - size - 1)) {
+                        openBlock($i - size - 1)
+                    }
+                    if (getRow($i - size) == getRow($i - size + 1)) {
+                        openBlock($i - size + 1)
+                    }
+
+                    openBlock($i + size)
+
+                    openBlock($i - size)
                 }
             }
+        }
+
+        function resize(size) {
+            $('#board tbody.board_row').empty()
+
+            opened = []
+
+            for ($i = 0; $i < size; $i++) {
+                $('#board tbody.board_row').append('<tr class=' + 'row_' + ($i) + '></tr>');
+                opened.push([])
+                for ($j = 0; $j < size; $j++) {
+                    $('#board tr.row_' + $i).append('<td class="block-closed" id=' + ($i * size + $j) + '></td>')
+                    opened[$i].push(0)
+                }
+            }
+
+            for ($i = 0; $i < mines; $i++) {
+                //숫자가 중복될 가능성?
+                $mineId = Math.floor(Math.random() * size * size);
+                $('#' + $mineId).addClass('css-mine');
+            }
+            for ($i = 0; $i < size * size; $i++) {
+                let mines1 = 0;
+                if (getRow($i) == getRow($i + 1)) {
+                    setBg($i + 1) == true ? mines1++ : ''
+                }
+                if (getRow($i) == getRow($i - 1)) {
+                    setBg($i - 1) == true ? mines1++ : ''
+                }
+                setBg($i + size) == true ? mines1++ : ''
+                if (getRow($i + size) == getRow($i + size + 1)) {
+                    setBg($i + size + 1) == true ? mines1++ : ''
+                }
+                if (getRow($i + size) == getRow($i + size - 1)) {
+                    setBg($i + size - 1) == true ? mines1++ : ''
+                }
+                setBg($i - size) == true ? mines1++ : ''
+                if (getRow($i - size) == getRow($i - size + 1)) {
+                    setBg($i - size + 1) == true ? mines1++ : ''
+                }
+                if (getRow($i - size) == getRow($i - size - 1)) {
+                    setBg($i - size - 1) == true ? mines1++ : ''
+                }
+                $('#' + $i).text(mines1)
+            }
+
+            $('td').on("click", function () {
+                $currId = parseInt(($(this).attr('id')))
+                openBlock($currId)
+            });
+
+            $('td.block-closed').on('mousedown', function (event) {
+                if (event.button === 2 || event.which === 3) {
+                    $currId = parseInt(($(this).attr('id')))
+                    if ($('#' + $currId).hasClass('flag')) $('#' + $currId).removeClass('flag')
+                    else $('#' + $currId).addClass('flag')
+                }
+            }).on('contextmenu', function () {
+                return false;
+            });
+
         }
 
     })
