@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <title>Minesweeper</title>
     <link href="index.css" rel="stylesheet" type="text/css">
+    <script src="https://kit.fontawesome.com/99310f5d8d.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 <script>
-    //ToDo. 스크립트 별도 파일에 저장, 마우스 우클릭 이벤트 방지, 변수명 통일
     $(document).ready(function () {
         let size = 15
-        let mines = 35;
+        let mines = 25;
         let opened = [];
 
         resize(size)
@@ -83,7 +83,9 @@
             for ($i = 0; $i < mines; $i++) {
                 //숫자가 중복될 가능성?
                 $mineId = Math.floor(Math.random() * size * size);
-                $('#' + $mineId).addClass('css-mine');
+                if(!$('#' + $mineId).hasClass('css-mine')){
+                    $('#' + $mineId).addClass('css-mine');
+                }
             }
             for ($i = 0; $i < size * size; $i++) {
                 let mines1 = 0;
@@ -107,7 +109,7 @@
                 if (getRow($i - size) === getRow($i - size - 1)) {
                     setBg($i - size - 1) === true ? mines1++ : ''
                 }
-                $('#' + $i).text(mines1)
+                $('#' + $i).append('<p>'+mines1+'</p>')
             }
 
             $('td').on("click", function () {
@@ -115,11 +117,17 @@
                 openBlock($currId)
             });
 
-            $('td.block-closed').on('mousedown', function (event) {
-                if (event.button === 2 || event.which === 3) {
+            $('.block-closed').on('mousedown', function (event) {
+                if ((event.button === 2 || event.which === 3) && $(this).hasClass('block-closed')) {
                     $currId = parseInt(($(this).attr('id')))
-                    if ($('#' + $currId).hasClass('flag')) $('#' + $currId).removeClass('flag')
-                    else $('#' + $currId).addClass('flag')
+                    if ($(this).children().hasClass('far fa-flag')) {
+                        $(this).children('i').remove() 
+                        $(this).children('p').css('display', 'block')
+                    }
+                    else {
+                        $(this).append('<i class="far fa-flag"></i>')
+                        $(this).children('p').css('display', 'none')
+                    }
                 }
             }).on('contextmenu', function () {
                 return false;

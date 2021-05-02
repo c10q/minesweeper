@@ -8,9 +8,9 @@ body{
 }
 td{
     border: 1px solid #000;
-    width: 20px;
-    height: 20px;
-    line-height: 20px;
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
     text-align: center;
 }
 input[type="text"]{
@@ -22,15 +22,14 @@ button{
 .css-mine{
     background-color: #000;
 }
-
-.flag{
-    background-color: red;
-}
-
 .block-closed{
-    background-color: #6d3030;
+    background-color: #8C8C8C;
 }
 
 .block-closed:hover{
     background-color: dimgray;
+}
+i.fa-flag{
+    font-weight: 600;
+    color: #980000;
 }
