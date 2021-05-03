@@ -11,7 +11,7 @@
 <script>
     $(document).ready(function () {
         let size = 15
-        let mines = 25;
+        let mines = 16;
         let opened = [];
 
         resize(size)
@@ -34,6 +34,7 @@
         function openBlock(num) {
             let i = parseInt(num);
             $('#' + i).removeClass('block-closed')
+            $('#' + i).children('p').css('display', 'block')
 
             if (($('#' + i).text() === '0')) {
                 if (opened[Math.floor(i / size)][i % size] === 0) {
@@ -46,7 +47,7 @@
                         openBlock(i - 1)
                     }
 
-                    if (getRow(i + size) === getRow(i  + size - 1)) {
+                    if (getRow(i + size) === getRow(i + size - 1)) {
                         openBlock(i + size - 1)
                     }
                     if (getRow(i + size) === getRow(i + size + 1)) {
@@ -66,6 +67,24 @@
             }
         }
 
+        function checkEnd() {
+            let total = 0
+
+            for ($i = 0; $i < (size * size); $i++){
+                if($('#' + $i).hasClass('block-closed')){
+                    total += 1
+                }
+            }
+
+            console.log(total)
+            if (total === mines) {
+                $('#board tbody.board_row').empty().append(
+                    '<h3>성공!</h3><button id="retry-button">재시작</button>'
+                )
+                $('#retry-button').on("click", () => resize(size))
+            }
+        }
+
         function resize(size) {
             $('#board tbody.board_row').empty()
 
@@ -80,13 +99,16 @@
                 }
             }
 
-            for ($i = 0; $i < mines; $i++) {
-                //숫자가 중복될 가능성?
+            $mineArr = []
+
+            while ($mineArr.length < mines){
                 $mineId = Math.floor(Math.random() * size * size);
-                if(!$('#' + $mineId).hasClass('css-mine')){
+                if (!$('#' + $mineId).hasClass('css-mine') && !$mineArr.includes($mineId)) {
                     $('#' + $mineId).addClass('css-mine');
+                    $mineArr.push($mineId)
                 }
             }
+
             for ($i = 0; $i < size * size; $i++) {
                 let mines1 = 0;
                 if (getRow($i) === getRow($i + 1)) {
@@ -109,22 +131,29 @@
                 if (getRow($i - size) === getRow($i - size - 1)) {
                     setBg($i - size - 1) === true ? mines1++ : ''
                 }
-                $('#' + $i).append('<p>'+mines1+'</p>')
+                $('#' + $i).append('<p>' + mines1 + '</p>')
             }
 
             $('td').on("click", function () {
+                if ($(this).hasClass('css-mine')) {
+                    $('#board tbody.board_row').empty().append(
+                        '<h3>게임 종료</h3><button id="retry-button">재시작</button>'
+                    )
+                    $('#retry-button').on("click", () => resize(size))
+                    return
+                }
                 $currId = parseInt(($(this).attr('id')))
                 openBlock($currId)
-            });
+                checkEnd(opened)
+            })
 
             $('.block-closed').on('mousedown', function (event) {
                 if ((event.button === 2 || event.which === 3) && $(this).hasClass('block-closed')) {
                     $currId = parseInt(($(this).attr('id')))
                     if ($(this).children().hasClass('far fa-flag')) {
-                        $(this).children('i').remove() 
+                        $(this).children('i').remove()
                         $(this).children('p').css('display', 'block')
-                    }
-                    else {
+                    } else {
                         $(this).append('<i class="far fa-flag"></i>')
                         $(this).children('p').css('display', 'none')
                     }
@@ -132,9 +161,7 @@
             }).on('contextmenu', function () {
                 return false;
             });
-
         }
-
     })
 </script>
 <input id="board-size-value" type="text">

@@ -24,8 +24,11 @@ button{
 }
 .block-closed{
     background-color: #8C8C8C;
-}
 
+}
+p{
+    display: none;
+}
 .block-closed:hover{
     background-color: dimgray;
 }
